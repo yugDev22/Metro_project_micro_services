@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Swipe In</title>
+<link th:href="@{/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+	<h1>Metro System</h1>
+	<hr>
+	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<hr>
+	<h4>Swipe in your card</h4>
+	<hr>
+	<h5 style="color:red" th:text="${message}"></h5>
+	<form action="./swipeIn" method="post">
+		Card Id: <input type="radio" th:text="${cardId}" th:value="${cardId}" th:name="cardId" checked="checked">
+		<br>
+		Select Source station :
+		<select th:name="sourceStationId">
+			<option th:each="station:${stationList}"
+					th:value="${station.stationId}"
+					th:label="${station.stationName}">
+			</option>
+		</select>
+		<br>
+		<input type="submit" value="Swipe In">
+	</form>
+	
+	<hr>
+	<a href="./swipe">Go Back</a>|<a href="./dashboard">Home</a>
+
+</body>
+</html>

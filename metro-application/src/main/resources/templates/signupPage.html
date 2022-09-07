@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Registration page</title>
+<link th:href="@{/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+	<h1>Welcome to Metro System</h1>
+	<hr>
+	<h3>Register yourself</h3>
+	<hr>
+	<form action="/afterSignup" method="post">
+		Enter your name   :<input type="text" name="passengerName" required="required" placeholder="Your Name"> <br><br>
+		Enter your mobile :<input type="tel" name="passengerPhone" required="required" pattern="[0-9]{10}" placeholder="10 digit mobile number"> <br><br>
+		Enter your Age   :<select name="passengerAge">
+    <option th:each="i : ${#numbers.sequence(18, 100)}" th:value="${i}" th:text="${i}">
+    </option>
+</select> <br><br>
+		Enter your email  :<input type="email" name="passengerEmail" required="required" placeholder="Email address"> <br><br>
+		Enter your password:<input type="password" name="passengerPassword" required="required" placeholder="Password"> <br><br>
+		<input type="submit" value="Sign Up">
+		<input type="reset" value="Reset Form">
+	</form>
+	<hr>
+	<br>
+	<a href="./">Home</a>
+</body>
+</html>

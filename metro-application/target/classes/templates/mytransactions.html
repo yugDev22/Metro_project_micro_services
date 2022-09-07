@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>View your transactions</title>
+<link th:href="@{/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+	<h1>Metro System</h1>
+	<hr>
+	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<hr>
+	<h4>Show My Transactions</h4>
+	<hr>
+	<br>
+	<form action="./showMyTransactions" method="post">
+		Select card to view Transactions : <select th:name="cardId1">
+			<option th:each="card:${cardList}"
+					th:value="${card.cardId}"
+					th:label="${card.cardId}">
+			</option>
+		</select>
+		<input type="submit" value="Show">
+	</form>
+	<br>
+	<table border="1">
+		<tr>
+			<th>Transaction Id</th>
+			<th>Card Id</th>
+			<th>Boarding Station Id</th>
+			<th>Destination Station Id</th>
+			<th>Fare</th>
+			<th>Swipe In Time</th>
+			<th>Swipe Out Time</th>
+		</tr>
+		<tr th:each="transaction : ${transactionList}">
+			<td th:text="${transaction.transactionId}"></td>
+			<td th:text="${transaction.cardId}"></td>
+			<td th:text="${transaction.boardingStationId}"></td>
+			<td th:text="${transaction.destinationStationId}"></td>
+			<td th:text="${transaction.fare}"></td>
+			<td th:text="${transaction.swipeInTime}"></td>
+			<td th:text="${transaction.swipeOutTime}"></td>
+		</tr>
+	</table>
+	<br>
+	<hr>
+	<a href="./dashboard">Go back</a>
+</body>
+</html>

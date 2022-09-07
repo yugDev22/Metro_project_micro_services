@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Swipe Card</title>
+<link th:href="@{/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+	<h1>Metro System</h1>
+	<hr>
+	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<hr>
+	<h4>Swipe your card</h4>
+	<hr>
+	<br>
+	<h6 style="color:red" th:text="${message}"></h6>
+	<form action="/swipeCard" method="post">
+		Select card :<select th:name="cardId1">
+			<option th:each="card:${cardList}"
+					th:value="${card.cardId}"
+					th:label="'Card ID: '+${card.cardId}+', Balance: '+${card.balance}">
+			</option>
+			</select>
+			<br>
+		<input type="submit" value="Swipe">
+	</form>
+	<br>
+	<hr>
+	<a href="./dashboard">Go back</a>
+
+</body>
+</html>

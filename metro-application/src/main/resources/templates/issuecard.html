@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Issue new Metro card</title>
+<link th:href="@{/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+	<h1>Metro System</h1>
+	<hr>
+	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<h4>Issue new Metro card</h4>
+	<hr>
+
+	<form action="./issueNow" method="post">
+		Enter balance to add: <input type="number" name="bal" step="0.01"><br>
+		<input type="submit" value="Issue Card">
+	</form>
+	<h5 style="color:red" th:text="${message}"></h5>
+	<hr>
+	<a href="./dashboard">Go back</a>
+</body>
+</html>
