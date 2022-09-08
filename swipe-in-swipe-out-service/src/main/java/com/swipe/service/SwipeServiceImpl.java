@@ -20,6 +20,9 @@ public class SwipeServiceImpl implements SwipeService {
 	private SwipeDao swipeDao;
 	
 	@Autowired
+	private MetroCardService metroCardService;
+	
+	@Autowired
 	private RestTemplate restTemplate;
 
 	@Override
@@ -50,12 +53,10 @@ public class SwipeServiceImpl implements SwipeService {
 	public SwipeTransaction swipeOut(SwipeTransaction transaction) {
 		// update already existing swiped in transaction by
 		// adding destination station, fare, & boarding time.
-		ResponseEntity<MetroCard> responseEntity = restTemplate.getForEntity("http://metrocard-service/cards/"+transaction.getCardId(), MetroCard.class);
-		HttpStatus httpStatus = responseEntity.getStatusCode();
-		if(!httpStatus.equals(HttpStatus.FOUND)) {
+		MetroCard metroCard = metroCardService.getMetroCardById(transaction.getCardId());
+		if(metroCard==null||metroCard.getCardId()==null) {
 			return null;
 		}
-		MetroCard metroCard = responseEntity.getBody();
 		//------+++++++------//
 		int sourceStation = transaction.getBoardingStationId();
 		int destStation = transaction.getDestinationStationId();
