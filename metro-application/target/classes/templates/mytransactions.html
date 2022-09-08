@@ -8,10 +8,15 @@
 <body>
 	<h1>Metro System</h1>
 	<hr>
-	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<section class="container">
+	  <div><h3 th:text="'Welcome '+${session.userName}"></h3></div>
+	  <div><a href="./logout">LogOut</a></div>
+	</section>
 	<hr>
 	<h4>Show My Transactions</h4>
 	<hr>
+	<br>
+	<h5 style="color:red" th:text="${message}"></h5>
 	<br>
 	<form action="./showMyTransactions" method="post">
 		Select card to view Transactions : <select th:name="cardId1">

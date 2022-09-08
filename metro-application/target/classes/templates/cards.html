@@ -8,11 +8,15 @@
 <body>
 	<h1>Metro System</h1>
 	<hr>
-	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<section class="container">
+	  <div><h3 th:text="'Welcome '+${session.userName}"></h3></div>
+	  <div><a href="./logout">LogOut</a></div>
+	</section>
+	<hr>
 	<h4>Show My cards</h4>
 	<hr>
 	<br>
-	<h5 th:text="${message}"></h5>
+	<h5 style="color:red" th:text="${message}"></h5>
 	<table border="1">
 	<tr>
 		<th>Card ID</th>

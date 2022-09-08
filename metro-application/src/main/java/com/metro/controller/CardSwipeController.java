@@ -98,6 +98,15 @@ public class CardSwipeController {
 		
 		String cardId = (String) request.getParameter("cardId");
 		String destinationStationId = request.getParameter("destinationStationId");
+		if(destinationStationId==null) {
+			List<Station> stationList = stationService.getAllStations();
+			modelAndView.addObject("cardId",cardId);
+			modelAndView.addObject("stationList",stationList);
+			modelAndView.setViewName("swipeout");
+			modelAndView.addObject("message", "Unable to swipe out, invalid station!");
+			return modelAndView;
+			
+		}
 		if(!(cardId==null||cardId.isEmpty()||destinationStationId.isEmpty())) {
 			if(metroCardService.searchMetroCardById(Integer.parseInt(cardId)).getBalance()<20) {
 				List<Station> stationList = stationService.getAllStations();
@@ -143,11 +152,19 @@ public class CardSwipeController {
 		
 		String cardId = request.getParameter("cardId");
 		String sourceStationId = request.getParameter("sourceStationId");
+		if(sourceStationId==null) {
+			List<Station> stationList = stationService.getAllStations();
+			modelAndView.addObject("cardId",cardId);
+			modelAndView.addObject("stationList",stationList);
+			modelAndView.setViewName("swipein");
+			modelAndView.addObject("message", "Unable to swipe in, invalid station!");
+			return modelAndView;
+			
+		}
 		if(!(cardId==null||cardId.isEmpty()||sourceStationId.isEmpty())) {
 			if(metroCardService.searchMetroCardById(Integer.parseInt(cardId)).getBalance()<20) {
 				List<Station> stationList = stationService.getAllStations();
 				modelAndView.addObject("cardId",cardId);
-				modelAndView.addObject("message", "");
 				modelAndView.addObject("stationList",stationList);
 				modelAndView.setViewName("swipein");
 				modelAndView.addObject("message", "Unable to swipe in, balance is less than 20");

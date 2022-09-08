@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import com.metro.bean.Station;
 import com.metro.bean.StationsList;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class StationServiceImpl implements StationService {
@@ -18,13 +19,19 @@ public class StationServiceImpl implements StationService {
 	private RestTemplate restTemplate;
 
 	@Override
+	@CircuitBreaker(name = "searchStationCB", fallbackMethod = "searchMetroStationByIdFallback")
 	public Station searchMetroStationById(int stationId) {
-		ResponseEntity<Station> response = restTemplate.getForEntity("http://station-service/stations/"+stationId, Station.class);
+		ResponseEntity<Station> response = restTemplate.getForEntity("http://station-service/stations/" + stationId,
+				Station.class);
 		HttpStatus status = response.getStatusCode();
-		if(!status.equals(HttpStatus.FOUND)) {
+		if (!status.equals(HttpStatus.FOUND)) {
 			return null;
 		}
 		return response.getBody();
+	}
+	
+	public Station searchMetroStationByIdFallback(Exception e) {
+		return null;
 	}
 
 	@Override
@@ -34,13 +41,19 @@ public class StationServiceImpl implements StationService {
 	}
 
 	@Override
+	@CircuitBreaker(name = "allStationsCB", fallbackMethod = "getAllStationsFallback")
 	public ArrayList<Station> getAllStations() {
-		ResponseEntity<StationsList> response = restTemplate.getForEntity("http://station-service/allstations", StationsList.class);
+		ResponseEntity<StationsList> response = restTemplate.getForEntity("http://station-service/allstations",
+				StationsList.class);
 		HttpStatus status = response.getStatusCode();
-		if(!status.equals(HttpStatus.FOUND)) {
+		if (!status.equals(HttpStatus.FOUND)) {
 			return new ArrayList<Station>();
 		}
 		return new ArrayList<Station>(response.getBody().getStationList());
+	}
+	
+	public ArrayList<Station> getAllStationsFallback(Exception e){
+		return new ArrayList<Station>();
 	}
 
 }

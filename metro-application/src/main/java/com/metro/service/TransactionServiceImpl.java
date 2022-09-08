@@ -13,6 +13,8 @@ import com.metro.bean.MetroCard;
 import com.metro.bean.SwipeTransaction;
 import com.metro.bean.TransactionsList;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -24,19 +26,25 @@ public class TransactionServiceImpl implements TransactionService {
 	
 	
 	@Override
+	@CircuitBreaker(name="AllTransactionsCB",fallbackMethod = "getAllTransactionsByCardIdFallback")
 	public List<SwipeTransaction> getAllTransactionsByCardId(int cardId) {
 		ResponseEntity<TransactionsList> response = restTemplate.getForEntity("http://swipe-service/transactions/"+cardId, TransactionsList.class);
 		HttpStatus httpStatus = response.getStatusCode();
 		if(!httpStatus.equals(HttpStatus.FOUND)) {
 			List<SwipeTransaction> list = new ArrayList<SwipeTransaction>();
-			list.add(new SwipeTransaction());
+			//list.add(new SwipeTransaction());
 			return list;
 		}
 		
 		return new ArrayList<SwipeTransaction>(response.getBody().getTransactionList());
 	}
+	
+	public List<SwipeTransaction> getAllTransactionsByCardIdFallback(Exception e){
+		return new ArrayList<SwipeTransaction>();
+	}
 
 	@Override
+	@CircuitBreaker(name="swipeInCB",fallbackMethod = "addNewTransactionFallback")
 	public int addNewTransaction(SwipeTransaction transaction) {
 		if(transaction.getDestinationStationId()==null) {
 			transaction.setDestinationStationId(0);
@@ -47,23 +55,30 @@ public class TransactionServiceImpl implements TransactionService {
 		if(!httpStatus.equals(HttpStatus.CREATED)) {
 			return 0;
 		}
-	
-		
 		return 1;
+	}
+	
+	public int addNewTransactionFallback(Exception e){
+		return 0;
 	}
 
 	@Override
+	@CircuitBreaker(name="alreadySwipedCB",fallbackMethod = "alreadySwipedInFallback")
 	public SwipeTransaction alreadySwipedIn(Integer cardId) {
 		ResponseEntity<SwipeTransaction> response = restTemplate.getForEntity("http://swipe-service/swiped/"+cardId,SwipeTransaction.class);
 		HttpStatus httpStatus = response.getStatusCode();
 		if(!httpStatus.equals(HttpStatus.FOUND)) {
 			return null;
 		}
-
 		return response.getBody();
 	}
 
+	public SwipeTransaction alreadySwipedInFallback(Exception e) {
+		return null;
+	}
+	
 	@Override
+	@CircuitBreaker(name="swipeOutCB",fallbackMethod = "updateTransactionFallback")
 	public SwipeTransaction updateTransaction(SwipeTransaction transaction) {
 		Double balance = metroCardService.checkCardBalance(transaction.getCardId());
 		if(balance==null) {
@@ -94,6 +109,9 @@ public class TransactionServiceImpl implements TransactionService {
 			return null;
 			
 		}
+	}
+	public SwipeTransaction updateTransactionFallback(Exception e) {
+		return null;
 	}
 	
 

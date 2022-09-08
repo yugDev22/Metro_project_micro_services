@@ -59,13 +59,13 @@ a:hover{
 	font-size: 110%;
 }
 
-.nav{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
 }
-.nav_a{
-	
+
+.container div{
+	display:flex;
+	align-items: center;
 }

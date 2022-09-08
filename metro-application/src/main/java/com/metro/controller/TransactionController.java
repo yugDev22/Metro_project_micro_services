@@ -60,15 +60,25 @@ public class TransactionController {
 			return modelAndView;
 		}
 		String cardId = (String) request.getParameter("cardId1");
+		if(cardId==null) {
+			modelAndView.setViewName("mytransactions");
+			modelAndView.addObject("message","Invalid Card id");
+			modelAndView.addObject("cardList",new ArrayList<MetroCard>());
+			modelAndView.addObject("transactionList",new ArrayList<SwipeTransaction>());
+			return modelAndView;
+			
+		}
 		Passenger passenger = metroUserService.getPassenger(userId);
 		List<MetroCard> cardList = metroCardService.getAllCards(passenger.getPassengerId());
 		List<SwipeTransaction> transactionList = transactionService.getAllTransactionsByCardId(Integer.parseInt(cardId));
+		
 		if(transactionList==null||transactionList.isEmpty()) {
 			transactionList = new ArrayList<SwipeTransaction>();
 			transactionList.add(new SwipeTransaction(null, null, null, null, null, null, null));
 		}
 		modelAndView.setViewName("mytransactions");
 		modelAndView.addObject("cardList",cardList);
+		modelAndView.addObject("message","");
 		modelAndView.addObject("transactionList",transactionList);
 		return modelAndView;
 	}

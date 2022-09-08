@@ -36,9 +36,13 @@ public class CardController {
 		}
 		Passenger passenger = metroUserService.getPassenger(userId);
 		ArrayList<MetroCard> cardList = metroCardService.getAllCards(passenger.getPassengerId());
+		if(cardList.isEmpty()) {
+			ModelAndView modelAndView = new ModelAndView("cards", "cardList", new ArrayList<MetroCard>());
+			modelAndView.addObject("message", "No cards to show");
+			return modelAndView;
+		}
 		ModelAndView modelAndView = new ModelAndView("cards", "cardList", cardList);
 		modelAndView.addObject("message", "");
-
 		return modelAndView;
 	}
 
@@ -84,6 +88,11 @@ public class CardController {
 					modelAndView.addObject("cardList", cardList);
 					return modelAndView;
 				}
+				else {
+					modelAndView.setViewName("issuecard");
+					modelAndView.addObject("message", "Unable to issue card");
+					return modelAndView;
+				}
 			}
 		}
 
@@ -126,6 +135,12 @@ public class CardController {
 		}
 		String balance = (String) request.getParameter("bal");
 		String cardId = (String) request.getParameter("cardId1");
+		if(cardId==null) {
+			modelAndView.setViewName("recharge");
+			modelAndView.addObject("message","Invalid card id");
+			modelAndView.addObject("cardList", new ArrayList<MetroCard>());
+			return modelAndView;
+		}
 		if (!balance.isBlank()||cardId.isBlank()) {
 			double bal = Double.parseDouble(balance);
 			if (bal >0) {

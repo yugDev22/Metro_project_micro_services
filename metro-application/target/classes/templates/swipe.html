@@ -8,12 +8,15 @@
 <body>
 	<h1>Metro System</h1>
 	<hr>
-	<h3 th:text="'Welcome '+${session.userName}"></h3>
+	<section class="container">
+	  <div><h3 th:text="'Welcome '+${session.userName}"></h3></div>
+	  <div><a href="./logout">LogOut</a></div>
+	</section>
 	<hr>
 	<h4>Swipe your card</h4>
 	<hr>
 	<br>
-	<h6 style="color:red" th:text="${message}"></h6>
+	<h5 style="color:red" th:text="${message}"></h5>
 	<form action="/swipeCard" method="post">
 		Select card :<select th:name="cardId1">
 			<option th:each="card:${cardList}"

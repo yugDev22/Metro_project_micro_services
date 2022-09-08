@@ -92,7 +92,6 @@ public class MetroController {
 	public ModelAndView logoutController(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		
 		ModelAndView modelAndView = new ModelAndView("output");
 		modelAndView.addObject("message","Successfully logged out");
 		return modelAndView;
